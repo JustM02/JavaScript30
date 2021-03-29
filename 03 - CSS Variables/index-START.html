@@ -45,6 +45,30 @@
   </style>
 
   <script>
+    const image = document.querySelector("img"), space = document.getElementById("spacing"), color = document.getElementById("base");
+    const titleJS = document.querySelector(".hl"), blur = document.getElementById("blur");
+    image.style.borderStyle = 'solid';
+
+    space.addEventListener("input", updateSpacing);
+    blur.addEventListener("input", updateBlur);
+    color.addEventListener("change", updateColor);
+
+    updateColor();
+    updateBlur();
+
+    function updateSpacing() {
+      image.style.borderWidth = `${space.value}px`;
+    }
+
+    function updateColor() {
+      titleJS.style.color = color.value;
+      image.style.borderColor = color.value;
+    }
+
+    function updateBlur() {
+      image.style.filter = `blur(${blur.value}px)`
+    }
+
   </script>
 
 </body>
