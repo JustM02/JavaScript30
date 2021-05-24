@@ -5,8 +5,58 @@
   <title>HTML5 Canvas</title>
 </head>
 <body>
-<canvas id="draw" width="800" height="800"></canvas>
+<canvas id="draw" width="1920" height="969"></canvas>
 <script>
+  const canvas = document.getElementById('draw');
+  const ctx = canvas.getContext('2d');
+  let color = 0;
+  let increasing = true;
+  ctx.strokeStyle = "hsl(" + color + ",80%,50%)";
+  ctx.lineWidth = 1;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  let mousePressed = false;
+  let mouseX = 0, mouseY = 0, lastX = 0, lastY = 0;
+  canvas.addEventListener('mousedown',onClick);
+  canvas.addEventListener('mouseup', onMouseRelease);
+  canvas.addEventListener('mouseleave', onMouseRelease);
+  canvas.addEventListener('mousemove', onMouseMove);
+
+  function onClick(event) {
+    mousePressed = true;
+    [lastX, lastY] = [event.offsetX, event.offsetY];
+  }
+
+  function onMouseRelease() {
+    mousePressed = false;
+  }
+
+  function onMouseMove(event) {
+    color++;
+    if(color == 360) {
+      color = 0;
+    }
+    ctx.strokeStyle = "hsl(" + color + ",80%,50%)";
+    if(mousePressed) {
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(event.offsetX, event.offsetY);
+      ctx.stroke();
+      [lastX, lastY] = [event.offsetX, event.offsetY];
+      if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+        increasing = !increasing;
+      }
+      if(increasing) {
+        ctx.lineWidth++;
+      } else {
+        ctx.lineWidth--;
+      }
+
+    }
+    
+  }
+
+
 </script>
 
 <style>
