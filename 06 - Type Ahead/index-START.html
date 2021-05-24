@@ -16,7 +16,68 @@
   </form>
 <script>
 const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+const textbox = document.querySelector(".search");
+const suggestions = document.querySelector(".suggestions");
+textbox.addEventListener('input', onTextTyped);
+let areas = [];
+fetch(endpoint)
+  .then(data => data.json())
+  .then(json => areas = json);
 
+function onTextTyped() {
+  const text = this.value;
+  if(text == "") return;
+  const [newCities, newStates] = [[],[]];
+  getNewCitiesStates(newCities, newStates, text);
+  const areasToAdd = newCities.concat(newStates);
+  const currentChildren = Array.from(document.getElementsByTagName("li"));
+  currentChildren.forEach(child => suggestions.removeChild(child));
+  
+  
+  areasToAdd.forEach(area => addNewNode(area, text));
+  
+}
+
+function addNewNode(area, text) {
+  let li = document.createElement("li");
+  let name = document.createElement('span');
+  name.setAttribute("id", "name");
+  let population = document.createElement('span');
+  population.setAttribute("id", "population");
+  population.appendChild(document.createTextNode(Number(area['population']).toLocaleString()));
+  let areaName = "";
+  let prevIndex = 0;
+  let areaNameString = area['city'] + ", " + area['state'];
+  let userInputIndex = areaNameString.toLowerCase().indexOf(text);
+  while(userInputIndex != -1) {
+    areaName = areaNameString.substring(prevIndex, userInputIndex);
+    name.appendChild(document.createTextNode(areaName));
+    let userText = document.createElement('span');
+    userText.setAttribute("class", "hl");
+    userText.appendChild(document.createTextNode(text));
+    name.appendChild(userText);
+    prevIndex = userInputIndex + text.length;
+    userInputIndex = areaNameString.toLowerCase().indexOf(text, userInputIndex + 1);
+  }
+  name.appendChild(document.createTextNode(areaNameString.substring(prevIndex)));
+  name.appendChild(population);
+  
+  li.appendChild(name);
+  li.appendChild(population);
+  suggestions.appendChild(li);
+}
+
+function getNewCitiesStates(newCities, newStates, text) {
+  areas.forEach(area => {
+    if(area['city'].toLowerCase().includes(text.toLowerCase())) {
+      newCities.push(area);
+    }
+    if(area['state'].toLowerCase().includes(text.toLowerCase())) {
+      newStates.push(area);
+    }
+  })
+  
+}
 </script>
 </body>
 </html>
