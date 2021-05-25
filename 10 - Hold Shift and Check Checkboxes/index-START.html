@@ -96,6 +96,49 @@
   </div>
 
 <script>
+  const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+  let canMultiSelect = false;
+  let holdingShift = false;
+  let firstInbox = null;
+  document.addEventListener('keydown', function(e) {
+    if(e.keyCode == 16) {
+      if(canMultiSelect) holdingShift = true;
+    }
+  });
+
+  document.addEventListener('keyup', function(e) {
+    if(e.keyCode == 16) {
+      holdingShift = false;
+    }
+  });
+
+  checkboxes.forEach(checkbox => checkbox.addEventListener('change', function(e) {
+    if(!e.target.checked) {
+      canMultiSelect = false;
+      return;
+    }
+    if(!canMultiSelect) {
+      canMultiSelect = true;
+      firstInbox = e.target;
+      return;
+    }
+    if(!holdingShift) return;
+    let outerBoxesFound = 0;
+    for(let checkbox of checkboxes) {
+      if(checkbox === firstInbox || checkbox === e.target) {
+        outerBoxesFound++;
+        
+        if(outerBoxesFound == 2) return;
+      }
+      if(outerBoxesFound == 1) {
+        if(!checkbox.checked) {
+          checkbox.checked = true;
+        }
+      }
+
+    }
+
+  }));
 </script>
 </body>
 </html>
