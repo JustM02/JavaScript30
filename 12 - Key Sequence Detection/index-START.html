@@ -7,6 +7,23 @@
 </head>
 <body>
 <script>
+  const keySequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a', 'Enter'];
+  let currKeys = [];
+  window.addEventListener('keyup', e => {
+    currKeys.push(e.key.toString());
+    console.log(currKeys);
+    if(currKeys.join('') === keySequence.join('')) {
+      currKeys = [];
+      console.log('code inputted');
+      return;
+    }
+    for(let i = 0; i < currKeys.length; i++) {
+      if(currKeys[i] != keySequence[i]) {
+        currKeys = [];
+        return;
+      }
+    }
+  });
 </script>
 </body>
 </html>
