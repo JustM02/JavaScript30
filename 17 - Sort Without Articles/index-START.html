@@ -47,7 +47,16 @@
 
 <script>
 const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+const articles = /^(a |an |the )/i;
+bands.sort((a, b) => getSortedBand(a) > getSortedBand(b) ? 1 : -1);
+const bandList = document.querySelector('#bands');
+bandList.innerHTML = bands.map(band => `<li>${band}</li>`)
+  .join('');
 
+  function getSortedBand(band) {
+    let reducedBand = band;
+    return reducedBand.replace(articles, "");
+  }
 
 </script>
 
